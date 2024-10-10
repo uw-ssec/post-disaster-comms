@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:support_sphere/constants/string_catalog.dart';
 import 'package:support_sphere/constants/color.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:support_sphere/data/repositories/user.dart';
 import 'package:support_sphere/presentation/router/auth_select.dart';
 import 'package:support_sphere/utils/config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +26,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (_) => AuthenticationRepository(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (_) => AuthenticationRepository(),
+        ),
+        RepositoryProvider(
+          create: (_) => UserRepository(),
+        ),
+      ],
       child: BlocProvider(
         create: (_) => AuthenticationBloc(
           authenticationRepository: context.read<AuthenticationRepository>(),

@@ -30,6 +30,12 @@ class SignupForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            _FirstNameInput(),
+            const SizedBox(height: 8),
+            _LastNameInput(),
+            const SizedBox(height: 8),
+            _UserNameInput(),
+            const SizedBox(height: 8),
             _EmailInput(),
             const SizedBox(height: 8),
             _PasswordInput(),
@@ -65,6 +71,136 @@ String? validateValue(List<FormFieldValidator<String?>> validators,
   }
   context.read<SignupCubit>().setValid();
   return null;
+}
+
+class _FirstNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          previous.givenName != current.givenName ||
+          previous.status != current.status,
+      builder: (context, state) {
+        return TextFormField(
+          key: const Key('signupForm_firstNameInput_textFormField'),
+          onChanged: (value) =>
+              context.read<SignupCubit>().firstNameChanged(value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) => validateValue(
+            [
+              FormBuilderValidators.required(),
+              FormBuilderValidators.firstName()
+            ],
+            value,
+            context,
+          ),
+          decoration: InputDecoration(
+            labelText: LoginStrings.givenName,
+            helperText: '',
+            border: border(context),
+            enabledBorder: border(context),
+            focusedBorder: focusBorder(context),
+            prefixIcon: Icon(
+              Ionicons.person_sharp,
+              size: 15.0,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LastNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          previous.familyName != current.familyName ||
+          previous.status != current.status,
+      builder: (context, state) {
+        return TextFormField(
+          key: const Key('signupForm_lastNameInput_textFormField'),
+          onChanged: (value) =>
+              context.read<SignupCubit>().lastNameChanged(value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) => validateValue(
+            [
+              FormBuilderValidators.required(),
+              FormBuilderValidators.lastName()
+            ],
+            value,
+            context,
+          ),
+          decoration: InputDecoration(
+            labelText: LoginStrings.familyName,
+            helperText: '',
+            border: border(context),
+            enabledBorder: border(context),
+            focusedBorder: focusBorder(context),
+            prefixIcon: Icon(
+              Ionicons.person_sharp,
+              size: 15.0,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _UserNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) =>
+          previous.userName != current.userName ||
+          previous.status != current.status,
+      builder: (context, state) {
+        return TextFormField(
+          key: const Key('signupForm_userNameInput_textFormField'),
+          onChanged: (value) =>
+              context.read<SignupCubit>().userNameChanged(value),
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) => validateValue(
+            [
+              FormBuilderValidators.required(),
+              FormBuilderValidators.minLength(3),
+              FormBuilderValidators.maxLength(32),
+              FormBuilderValidators.lowercase(),
+              
+              /// Validates that the username does not contain any special characters
+              (String? val) {
+                Function validate = FormBuilderValidators.hasSpecialChars();
+                String? validateResult = validate(val);
+                if (validateResult != null) {
+                  return null;
+                }
+                return ErrorMessageStrings.mustNotContainSpecialCharacters;
+              }
+              
+            ],
+            value,
+            context,
+          ),
+          decoration: InputDecoration(
+            labelText: LoginStrings.username,
+            helperText: '',
+            border: border(context),
+            enabledBorder: border(context),
+            focusedBorder: focusBorder(context),
+            prefixIcon: Icon(
+              Ionicons.happy_sharp,
+              size: 15.0,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _EmailInput extends StatelessWidget {
@@ -164,6 +300,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<SignupCubit>().passwordChanged(password),
           obscureText: !state.showPassword,
           autovalidateMode: AutovalidateMode.onUserInteraction,
+
           /// Checks input for password to have minimum character length of 8
           /// at least 1 uppercase, 1 lowercase, 1 number, and 1 special character
           /// see docs: https://pub.dev/documentation/form_builder_validators/latest/form_builder_validators/PasswordValidator-class.html
@@ -229,7 +366,7 @@ class _ConfirmedPasswordInput extends StatelessWidget {
               /// Validates that the confirmed password matches
               /// current password input
               (String? val) =>
-                  val != state.password ? 'Passwords do not match' : null,
+                  val != state.password ? ErrorMessageStrings.invalidConfirmPassword : null,
             ],
             value,
             context,
@@ -269,33 +406,30 @@ class _SignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SignupCubit, SignupState>(
       builder: (context, state) {
-        return state.status.isInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: state.isValid
-                    ? () =>
-                        context.read<SignupCubit>().signUpWithEmailAndPassword()
-                    : null,
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40.0),
-                    ),
-                  ),
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                // highlightElevation: 4.0,
-                child: const Text(
-                  LoginStrings.signUp,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              );
+        return ElevatedButton(
+          onPressed: state.isValid
+              ? () => context.read<SignupCubit>().signUpWithEmailAndPassword()
+              : null,
+          style: ButtonStyle(
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40.0),
+              ),
+            ),
+            backgroundColor: WidgetStateProperty.all<Color>(
+              Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          // highlightElevation: 4.0,
+          child: const Text(
+            LoginStrings.signUp,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
       },
     );
   }

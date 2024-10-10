@@ -34,7 +34,7 @@ class AuthenticationRepository {
 
   Future<void> logOut() async => await _authService.signOut();
 
-  Future<void> signUp({
+  Future<supabase_flutter.AuthResponse> signUp({
     required String email,
     required String password,
     required String signupCode,
@@ -43,7 +43,7 @@ class AuthenticationRepository {
     if (!isCodeValid) {
       throw Exception(ErrorMessageStrings.invalidSignUpCode);
     } else {
-      await _authService.signUpWithEmailAndPassword(email, password);
+      return _authService.signUpWithEmailAndPassword(email, password);
     }
   }
 
