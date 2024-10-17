@@ -11,6 +11,7 @@ class SignupState extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.isValid = false,
     this.showPassword = false,
+    this.isAllFieldsFilled = false,
     this.errorMessage,
   });
 
@@ -23,6 +24,7 @@ class SignupState extends Equatable {
   final FormzSubmissionStatus status;
   final bool isValid;
   final bool showPassword;
+  final bool isAllFieldsFilled;
   final String? errorMessage;
 
   @override
@@ -35,6 +37,7 @@ class SignupState extends Equatable {
         signupCode,
         status,
         isValid,
+        isAllFieldsFilled,
         errorMessage,
         showPassword,
       ];
@@ -48,6 +51,7 @@ class SignupState extends Equatable {
     String? signupCode,
     FormzSubmissionStatus? status,
     bool? isValid,
+    bool? isAllFieldsFilled,
     bool? showPassword,
     String? errorMessage,
   }) {
@@ -60,8 +64,19 @@ class SignupState extends Equatable {
       signupCode: signupCode ?? this.signupCode,
       status: status ?? this.status,
       isValid: isValid ?? this.isValid,
+      isAllFieldsFilled: isAllFieldsFilled ?? this.isAllFieldsFilled,
       errorMessage: errorMessage ?? this.errorMessage,
       showPassword: showPassword ?? this.showPassword,
     );
+  }
+
+  // Check if all fields are filled
+  bool checkAllFieldsFilled() {
+    return givenName.isNotEmpty &&
+        familyName.isNotEmpty &&
+        email.isNotEmpty &&
+        password.isNotEmpty &&
+        confirmedPassword.isNotEmpty &&
+        signupCode.isNotEmpty;
   }
 }

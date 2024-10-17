@@ -18,6 +18,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         givenName: value,
+        isAllFieldsFilled: state.copyWith(givenName: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -26,6 +27,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         familyName: value,
+        isAllFieldsFilled: state.copyWith(familyName: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -34,6 +36,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         email: value,
+        isAllFieldsFilled: state.copyWith(email: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -42,6 +45,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         password: value,
+        isAllFieldsFilled: state.copyWith(password: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -50,6 +54,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         signupCode: value,
+        isAllFieldsFilled: state.copyWith(signupCode: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -58,6 +63,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         confirmedPassword: value,
+        isAllFieldsFilled: state.copyWith(confirmedPassword: value).checkAllFieldsFilled(),
       ),
     );
   }
