@@ -6,6 +6,7 @@ final class LoginState extends Equatable {
     this.password = '',
     this.status = FormzSubmissionStatus.initial,
     this.isValid = false,
+    this.isAllFieldsFilled = false,
     this.showPassword = false,
     this.errorMessage,
   });
@@ -14,6 +15,7 @@ final class LoginState extends Equatable {
   final String password;
   final FormzSubmissionStatus status;
   final bool isValid;
+  final bool isAllFieldsFilled;
   final bool showPassword;
   final String? errorMessage;
 
@@ -25,6 +27,7 @@ final class LoginState extends Equatable {
     String? password,
     FormzSubmissionStatus? status,
     bool? isValid,
+    bool? isAllFieldsFilled,
     bool? showPassword,
     String? errorMessage,
   }) {
@@ -33,8 +36,14 @@ final class LoginState extends Equatable {
       password: password ?? this.password,
       status: status ?? this.status,
       isValid: isValid ?? this.isValid,
+      isAllFieldsFilled: isAllFieldsFilled ?? this.isAllFieldsFilled,
       errorMessage: errorMessage ?? this.errorMessage,
       showPassword: showPassword ?? this.showPassword,
     );
+  }
+  
+  // Check if all fields are filled
+  bool checkAllFieldsFilled() {
+    return email.isNotEmpty && password.isNotEmpty;
   }
 }

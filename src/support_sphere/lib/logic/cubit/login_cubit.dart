@@ -15,6 +15,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         email: value,
+        isAllFieldsFilled: state.copyWith(email: value).checkAllFieldsFilled(),
       ),
     );
   }
@@ -23,6 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         password: value,
+        isAllFieldsFilled: state.copyWith(password: value).checkAllFieldsFilled(),
       ),
     );
   }

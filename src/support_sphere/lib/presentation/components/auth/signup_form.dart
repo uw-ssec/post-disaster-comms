@@ -363,7 +363,9 @@ class _SignupButton extends StatelessWidget {
               ),
             ),
             backgroundColor: WidgetStateProperty.all<Color>(
-              Theme.of(context).colorScheme.primary,
+              (state.isAllFieldsFilled && state.isValid)
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey,
             ),
           ),
           // highlightElevation: 4.0,
