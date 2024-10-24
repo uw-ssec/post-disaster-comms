@@ -14,8 +14,12 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
-      listenWhen: (previous, current) => previous.status != current.status,
+      listenWhen: (previous, current) => 
+            previous.email != current.email ||
+            previous.password != current.password ||
+            previous.status != current.status,
       listener: (context, state) {
+        context.read<LoginCubit>().validateAllFieldsFilled();
         if (state.status.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -142,7 +146,7 @@ class _LoginButton extends StatelessWidget {
         return state.status.isInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
-                onPressed: state.isValid
+                onPressed: state.isValid && state.isAllFieldsFilled
                     ? () => context.read<LoginCubit>().logInWithCredentials()
                     : null,
                 style: ButtonStyle(
@@ -152,7 +156,9 @@ class _LoginButton extends StatelessWidget {
                     ),
                   ),
                   backgroundColor: WidgetStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.primary,
+                    (state.isAllFieldsFilled && state.isValid)
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.grey,
                   ),
                 ),
                 // highlightElevation: 4.0,

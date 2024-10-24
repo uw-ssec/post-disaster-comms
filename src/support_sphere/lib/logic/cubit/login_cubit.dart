@@ -13,19 +13,11 @@ class LoginCubit extends Cubit<LoginState> implements ValidatableCubit {
   final AuthenticationRepository _authenticationRepository;
 
   void emailChanged(String value) {
-    emit(
-      state.copyWith(
-        email: value,
-      ),
-    );
+    emit(state.copyWith(email: value));
   }
 
   void passwordChanged(String value) {
-    emit(
-      state.copyWith(
-        password: value,
-      ),
-    );
+    emit(state.copyWith(password: value));
   }
 
   void setValid() => emit(state.copyWith(isValid: true));
@@ -34,6 +26,11 @@ class LoginCubit extends Cubit<LoginState> implements ValidatableCubit {
   void toggleShowPassword() {
     changeShowPassword(emit, state);
   }
+
+  void validateAllFieldsFilled() {
+    bool isAllFieldsFilled = state.email.isNotEmpty && state.password.isNotEmpty;
+    emit(state.copyWith(isAllFieldsFilled: isAllFieldsFilled));
+}
 
   Future<void> logInWithCredentials() async {
     if (!state.isValid) return;
